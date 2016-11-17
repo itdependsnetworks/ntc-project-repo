@@ -1,0 +1,3 @@
+---
+
+    - include: "os/{{ os }}/{{ push_type }}.yml"

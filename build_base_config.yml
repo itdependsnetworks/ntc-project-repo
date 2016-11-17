@@ -1,0 +1,14 @@
+---
+
+  - name: CREATE CONFIG FILE
+    hosts: all
+    gather_facts: no
+    connection: local
+
+    vars_files:
+      - vars/global_settings.yml
+      - vars/credentials.yml
+
+    roles:
+      - build_base_config
+

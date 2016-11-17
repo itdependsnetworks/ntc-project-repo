@@ -1,0 +1,28 @@
+---
+
+
+#      - name: USE FILTER TO REVERSE MAPPING IF SERIAL IS DEFINED
+#        set_fact:
+#          reverse_mapping: "{{ device_to_serial_mapping | invert }}"
+#        when: "serial is defined"
+
+#      - name: GET DEVICE NAME IF SERIAL IS DEFINED AND SET IT
+#        set_fact:
+#          device: "{{ reverse_mapping[serial] }}"
+#        when: "serial is defined"
+
+#      - name: GET SERIAL IF DEVICE NAME IS DEFINED AND SET IT
+#        set_fact:
+#          serial: "{{ device_to_serial_mapping[device] }}"
+#        when: "device is defined"
+
+#      - name: SET CONFIG FILE FROM SERIAL
+#        set_fact:
+#          config_file: "conf_{{ serial }}.cfg"
+
+      #- name: CREATE_MD5
+      #  block:
+
+      #- name: STAT FILE FOR MD5 HASH
+      - name: CREATE_MD5
+        include: create_md5.yml

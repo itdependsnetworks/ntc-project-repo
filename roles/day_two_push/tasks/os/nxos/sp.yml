@@ -1,0 +1,4 @@
+---
+
+    - include: "sp/{{ feature }}.yml"
+

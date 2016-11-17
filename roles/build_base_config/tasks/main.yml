@@ -1,0 +1,58 @@
+---
+
+#  - name: CREATE CONFIG FILE
+#    hosts: all
+#    gather_facts: no
+#    connection: local
+#
+#    vars:
+#      base_path: "/srv/ftp/conf"
+
+#    tasks:
+
+      - name: USE FILTER TO REVERSE MAPPING IF SERIAL IS DEFINED
+        set_fact:
+          reverse_mapping: "{{ device_to_serial_mapping | invert }}"
+        when: "serial is defined"
+
+      - name: GET DEVICE NAME IF SERIAL IS DEFINED AND SET IT
+        set_fact:
+          device: "{{ reverse_mapping[serial] }}"
+        when: "serial is defined"
+
+      - name: GET SERIAL IF DEVICE NAME IS DEFINED AND SET IT
+        set_fact:
+          serial: "{{ device_to_serial_mapping[device] }}"
+        when: "device is defined"
+
+      - name: GET LAST TWO DIGITS AS NUM OFFSET
+        set_fact:
+          leafoffset: "{{ device[-2:] }}"
+
+      - name: GET FIRST TWO DIGITS AS SITE
+        set_fact:
+          site: "{{ device[:3] }}"
+
+      - name: GET FIRST TWO DIGITS AS SITE
+        set_fact:
+          config_type: "{{ device[4:6] }}"
+
+      - name: GET SUBNET
+        set_fact:
+          local_subnet: "{{ subnet[site] }}"
+
+      - name: GET FIRST THREE OCTETS OF SUBNET
+        set_fact:
+          mgmt_subnet_three_octet: "{{ local_subnet[:-2] }}"
+
+      - name: SET CONFIG FILE FROM SERIAL
+        set_fact:
+          config_file: "conf_{{ serial }}.cfg"
+
+      - block:
+          - name: BUILD CONFIG FILE
+            template:
+              src: "templates/{{ config_type }}_config.j2"
+              dest: "{{ base_path }}/{{ config_file }}"
+            notify: "CREATE_MD5"
+        when: "device is defined"

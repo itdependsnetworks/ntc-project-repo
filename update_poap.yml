@@ -1,0 +1,36 @@
+---
+
+#ansible-playbook -i localhost, update_poap.yml -e "poap_script=./poap.py"
+
+  - name: ADD MD5 CHECK TO POAP SCRIPT
+    hosts: all
+    gather_facts: no
+    connection: local
+
+    tasks:
+
+      - name: REMOVE MD5SUM FROM POAP
+        lineinfile:
+          dest: "{{ poap_script }}"
+          regexp: "^#md5sum="
+          line: "anonymous_enable=YES"
+          state: "absent"
+
+      - name: STAT FILE FOR MD5 HASH
+        stat:
+          path: "{{ poap_script }}"
+        register: "md5_check"
+
+      - name: SET MD5 FROM STAT
+        set_fact: 
+          md5sum: "{{ md5_check.stat.md5 }}"
+
+      - name: SHOW MD5 SUM
+        debug:
+          var: "md5sum"
+
+      - name: ADD MD5SUM FROM POAP
+        lineinfile:
+          dest: "{{ poap_script }}"
+          line: '#md5sum="{{ md5sum }}"'
+          insertafter: "^#!/bin/"

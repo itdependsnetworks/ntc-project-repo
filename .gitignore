@@ -1,0 +1,5 @@
+*.pyc
+*.retry
+*.sh
+group_vars/*
+host_vars/*

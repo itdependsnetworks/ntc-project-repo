@@ -1,0 +1,10 @@
+---
+
+    # ensure snmp community is configured
+    - nxos_snmp_community:
+        community: "{{ item.community }}"
+        group: "{{ item.group }}"
+        state: present
+        provider: "{{ nxos_provider }}"
+      with_items: "{{ snmp }}"
+
