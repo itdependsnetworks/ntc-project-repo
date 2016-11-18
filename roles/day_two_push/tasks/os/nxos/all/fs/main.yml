@@ -11,7 +11,7 @@
 
     - name: GET FILES ( FEATURES ) THAT EXIST
       stat: 
-        path: "{{ pwd }}/roles/day_two_push/tasks/os/{{ os }}/{{ push_type }}/{{ outer_item }}.yml"
+        path: "{{ pwd }}/roles/day_two_push/tasks/os/{{ os }}/{{ outer_item }}/{{ push_type }}/main.yml"
       with_items:
         - "{{ features }}"
       loop_control:
