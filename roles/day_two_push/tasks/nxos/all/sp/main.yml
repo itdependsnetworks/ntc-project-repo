@@ -11,7 +11,7 @@
 
     - name: GET FILES ( FEATURES ) THAT EXIST
       stat: 
-        path: "{{ pwd }}/roles/day_two_push/tasks/os/{{ os }}/{{ outer_item }}/{{ push_type }}/main.yml"
+        path: "{{ pwd }}/roles/day_two_push/tasks/{{ os }}/{{ outer_item }}/{{ push_type }}/main.yml"
       with_items:
         - "{{ features }}"
       loop_control:
@@ -19,11 +19,11 @@
       register: "st"
 
     - name: CREATE SINGLE LIST COMMANDS FROM FILES THAT EXIST
-      set_fact: 
-        files_exist: "{{ st.results|selectattr('stat', 'defined')|selectattr('stat.exists', 'equalto', True)|map(attribute='outer_item')|list }}"
+      set_fact:
+        files_exist: "{{ st.results|selectattr('stat', 'defined')|selectattr('stat.exists', 'equalto', True)|map(attribute='invocation.module_args.path')|list }}"
 
     - name: INCLUDE ALL FEATURES AND PUSH CONFIG
-      include: "./{{ files_item }}.yml"
+      include: "{{ files_item }}"
       with_items: 
         - "{{ files_exist }}"
       loop_control:

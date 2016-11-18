@@ -1,3 +1,3 @@
 ---
 
-    - include: "{{ os }}/{{ feature }}/{{ push_type }}.yml"
+    - include: "roles/day_two_push/tasks/{{ os }}/{{ feature }}/{{ push_type }}/main.yml"
