@@ -1,4 +1,4 @@
 ---
 
-    - include: "{{ feature }}/sp/main.yml"
+    - include: "{{ features }}/sp/main.yml"
 

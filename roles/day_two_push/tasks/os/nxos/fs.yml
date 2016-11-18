@@ -1,4 +1,4 @@
 ---
 
-    - include: "{{ feature }}/fs/main.yml"
+    - include: "{{ features }}/fs/main.yml"
 
