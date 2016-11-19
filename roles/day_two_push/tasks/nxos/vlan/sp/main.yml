@@ -1,0 +1,10 @@
+---
+
+    # ensure snmp community is configured
+    - nxos_config:
+        lines: 
+          - "vlan {{ vlan.id }}"
+          - "name {{ vlan.name }}"
+        provider: "{{ nxos_provider }}"
+      with_items: "{{ vlans }}"
+

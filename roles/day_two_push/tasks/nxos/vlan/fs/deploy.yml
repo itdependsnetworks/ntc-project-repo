@@ -1,0 +1,9 @@
+---
+
+    - name: ENSURE VLANS EXIST
+      nxos_vlan:
+        vlan_id: "{{ item.id }}"
+        name: "{{ item.name }}"
+        state: present
+        provider: "{{ nxos_provider }}"
+      with_items: "{{ vlans }}"

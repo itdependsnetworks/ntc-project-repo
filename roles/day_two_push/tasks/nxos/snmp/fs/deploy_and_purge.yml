@@ -1,0 +1,37 @@
+---
+
+    - name: ENSURE SNMP COMMUNITIES EXIST
+      nxos_snmp_community:
+        community: "{{ item.community }}"
+        group: "{{ item.group }}"
+        state: present
+        provider: "{{ nxos_provider }}"
+      with_items: "{{ snmp }}"
+
+
+    - name: GET CONFIG FOR SNMP PARSING
+      nxos_command:
+        provider: "{{ nxos_provider }}"
+        commands:
+          - command: 'show run'
+            output: "text"
+      register: "show_run"
+
+    - name: GET EXISTING SNMP COMMUNITIES AND SET FACT
+      set_fact: existing_snmp_communities={{ show_run.stdout[0] | regex_findall('snmp-server community (\S+)') }}
+
+    - name: SET FACT FOR PROPOSED (DESIRED) COMMUNITIES
+      set_fact:
+        proposed_snmp_communities: "{{ snmp|map(attribute='community')|list }}"
+
+    - name: CALCULATE AND SET FACT FOR SNMP COMMUNITIES TO REMOVE
+      set_fact:
+        snmp_communities_to_remove: "{{ existing_snmp_communities|difference(proposed_snmp_communities) }}"
+
+    - name: PURGE SNMP COMMUNITIES
+      nxos_snmp_community:
+        community: "{{ item }}"
+        group: "network-operator"
+        state: absent
+        provider: "{{ nxos_provider }}"
+      with_items: "{{ snmp_communities_to_remove }}"

@@ -1,0 +1,6 @@
+---
+
+    - set_fact:
+        path: "roles/day_two_push/tasks/{{ os }}/{{ feature }}/{{ push_type }}/"
+    - include: "{{ purge | default('false')| bool | ternary('{{ path }}/deploy_and_purge.yml', '{{ path }}/deploy.yml') }}"
+

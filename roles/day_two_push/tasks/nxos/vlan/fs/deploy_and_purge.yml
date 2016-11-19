@@ -1,0 +1,28 @@
+---
+
+    - name: ENSURE VLANS EXIST
+      nxos_vlan:
+        vlan_id: "{{ item.id }}"
+        name: "{{ item.name }}"
+        state: present
+        provider: "{{ nxos_provider }}"
+      with_items: "{{ vlans }}"
+
+    - name: "GET CONFIGURED VLANS (USING LEGACY FACT CALLED vlan_list)"
+      nxos_facts:
+        provider: "{{ nxos_provider }}"
+
+    - name: SET FACT FOR VLAN IDS THAT SHOULD EXIST
+      set_fact:
+        proposed_vlan_id_list: "{{ vlans|map(attribute='id')|list }}"
+
+    - name: CALCULATE AND SET FACT FOR VLAN IDS TO REMOVE
+      set_fact:
+        vlans_to_remove: "{{ vlan_list|difference(proposed_vlan_id_list) }}"
+
+    - name: PURGE VLANS
+      nxos_vlan:
+        vlan_id: "{{ item }}"
+        state: absent
+        provider: "{{ nxos_provider }}"
+      with_items: "{{ vlans_to_remove }}"
